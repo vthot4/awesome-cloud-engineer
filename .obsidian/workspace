@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "gcp/GCP_index.md",
+            "file": "GCP/GCP_index.md",
             "mode": "source",
             "source": false
           }
@@ -89,7 +89,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "gcp/GCP_index.md",
+                "file": "GCP/GCP_index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "gcp/GCP_index.md",
+                "file": "GCP/GCP_index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -129,7 +129,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "gcp/GCP_index.md"
+                "file": "GCP/GCP_index.md"
               }
             }
           }
@@ -142,10 +142,10 @@
   },
   "active": "cfee5f7e924cead0",
   "lastOpenFiles": [
-    "gcp/GCP_index.md",
-    "kubernetes/kubernetes_index.md",
+    "README.md",
     "Markdown/Markdown_index.md",
-    "FinOps/FinOps_Index.md",
-    "README.md"
+    "GCP/GCP_index.md",
+    "kubernetes/kubernetes_index.md",
+    "FinOps/FinOps_Index.md"
   ]
 }
