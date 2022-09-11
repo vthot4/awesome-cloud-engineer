@@ -9,9 +9,9 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "FinOps/FinOps_Index.md",
+            "file": "gcp/GCP_index.md",
             "mode": "source",
-            "source": true
+            "source": false
           }
         }
       },
@@ -21,8 +21,8 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "FinOps/FinOps_Index.md",
-            "mode": "preview",
+            "file": "kubernetes/kubernetes_index.md",
+            "mode": "source",
             "source": true
           }
         }
@@ -89,7 +89,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "FinOps/FinOps_Index.md",
+                "file": "gcp/GCP_index.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -106,7 +106,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "FinOps/FinOps_Index.md",
+                "file": "gcp/GCP_index.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -129,7 +129,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "FinOps/FinOps_Index.md"
+                "file": "gcp/GCP_index.md"
               }
             }
           }
@@ -140,8 +140,10 @@
     "width": 300,
     "collapsed": true
   },
-  "active": "4215db4cab4b44e5",
+  "active": "cfee5f7e924cead0",
   "lastOpenFiles": [
+    "gcp/GCP_index.md",
+    "kubernetes/kubernetes_index.md",
     "Markdown/Markdown_index.md",
     "FinOps/FinOps_Index.md",
     "README.md"
