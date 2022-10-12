@@ -27,6 +27,21 @@ Let's say that we have multiple environments. We're going to have one for develo
 
 ![[./images/nginx_envs.png]]
 
-<center>
-  <img src="./images/nginx_envs.png">
-</center>
+Let's say that we want to customize our deployment so that it behaves a little bit differently in each one of our environments.
+
+```Shell
+		replicas: 1    # dev environment
+		replicas: 2|3  # stg environment
+		replicas: 5|10 # prod environment   
+```
+
+How do we actually go about modifying the different configurations on a per-environemnt basis.
+One of the simplest solutions to this problem is to create three separate directories, one for each environment. 
+
+🗂️  dev 
+
+🗂️  stg
+
+🗂️  prod
+
+
