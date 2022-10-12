@@ -11,4 +11,6 @@ Source:   [Leveraging **Kustomize** for Kubernetes Manifests](https://learning
 
 - ***Overlaying*** describes the process where separate files are layered over (or stacked on top of) each other to create altered versions. Kustomize leverages specific kinds of overlays of the original manifest. The changes to be made in the rendered versions are declared in a separate, dedicated file named kustomization.yaml, while leaving the original files intact.
 
-- Kustomize requires this special file, kustomization.yaml, to drive its behavior. One section of the kustomization.yaml file is dedicated to listing the resources. This section lists the names (and sometimes the paths) of the original manifests to base changes on. When you run a kustomize build command, after loading the resources, Kustomize applies the overlays and renders the result.
+- Kustomize requires this special file, kustomization.yaml, to drive its behavior. One section of the kustomization.yaml file is dedicated to listing the resources. This section lists the names (and sometimes the paths) of the original manifests to base changes on. When you run a `kustomize build` command, after loading the resources, Kustomize applies the overlays and renders the result.
+
+- f
