@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "kustomize/kustomize_index.md",
+            "file": "kustomize/Leveraging_Kustomize.md",
             "mode": "source",
             "source": false
           }
@@ -77,7 +77,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "kustomize/kustomize_index.md",
+                "file": "kustomize/Leveraging_Kustomize.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -94,7 +94,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "kustomize/kustomize_index.md",
+                "file": "kustomize/Leveraging_Kustomize.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -117,7 +117,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "kustomize/kustomize_index.md"
+                "file": "kustomize/Leveraging_Kustomize.md"
               }
             }
           }
@@ -130,8 +130,8 @@
   },
   "active": "cfee5f7e924cead0",
   "lastOpenFiles": [
-    "kubernetes/kubernetes_index.md",
     "kustomize/kustomize_index.md",
+    "kubernetes/kubernetes_index.md",
     "FinOps/FinOps_Index.md",
     "gcp/GCP_index.md",
     "Markdown/Markdown_index.md",
