@@ -39,12 +39,45 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 
 
 ## Day 2
-**RESOURCES**
+
+### RESOURCES
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Scheduling.
 - https://kubernetes.io/docs/concepts/scheduling-eviction/kube-scheduler/
+- Kubernetes 101 - Kubernetes scheduler [Link](https://dominik-tornow.medium.com/the-kubernetes-scheduler-cd429abac02f)
+- A Deep Dive into Kubernetes Scheduling. [Link](https://thenewstack.io/a-deep-dive-into-kubernetes-scheduling/)
+- A Brief Analysis on the Implementation of the Kubernetes Scheduler. [Link](https://www.alibabacloud.com/blog/a-brief-analysis-on-the-implementation-of-the-kubernetes-scheduler_595083)
+- 
+
 
 > A scheduler watches for newly created Pods that have no Node assigned. For every Pod that the scheduler discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on.
 
+We can think of the Scheduler task as choosing the best place to allocate the required resources. A placement is a [partial](https://en.wikipedia.org/wiki/Partial_function), [non-injective](https://en.wikipedia.org/wiki/Injective_function) assignment of a set of Pods to a set of Nodes.
+
+![[kubernetes_cheduler.png]]
+
+
+### Manual scheduling
+
+### Labels and Selectors
+
+### Taints and Tolerations
+
+### Node Selectors
+
+### Node Affinity
+
+### Resource Limits
+
+### Demonsets
+
+### Static pods
+
+
+### Multiple Schedulers
+
+
+### Configuring Scheduler Profiles
+- https://kubernetes.io/docs/reference/scheduling/config/ 
 
 
 ## Day 3
