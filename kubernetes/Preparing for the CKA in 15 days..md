@@ -53,7 +53,7 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 
 We can think of the Scheduler task as choosing the best place to allocate the required resources. A placement is a [partial](https://en.wikipedia.org/wiki/Partial_function), [non-injective](https://en.wikipedia.org/wiki/Injective_function) assignment of a set of Pods to a set of Nodes.
 
-![[kubernetes_cheduler.png]]
+![[./images/kubernetes_cheduler.png]]
 
 
 ### Manual scheduling
