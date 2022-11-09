@@ -1,0 +1,202 @@
+{
+  "main": {
+    "id": "12bfd900ed4eb612",
+    "type": "split",
+    "children": [
+      {
+        "id": "c3ef84d6f4f29f62",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "178294c2a166b3fc",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "gcp/GCP_index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "64ee299a1b0e6fbe",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Markdown/Markdown_index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "54085a5eba4d0b6b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Terraform/Terraform_index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "03b75287890be353",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "kubernetes/kubernetes_index.md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          },
+          {
+            "id": "740bc45f4c329135",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "kubernetes/Preparing for the CKA in 15 days..md",
+                "mode": "source",
+                "source": false
+              }
+            }
+          }
+        ],
+        "currentTab": 4
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "6462961e03995651",
+    "type": "split",
+    "children": [
+      {
+        "id": "c62690f7460833dc",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "88b6dbca616e8ffe",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "1ba3035e47a25eb7",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "615948700a083c30",
+            "type": "leaf",
+            "state": {
+              "type": "starred",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 269.5
+  },
+  "right": {
+    "id": "f0f3b9a2c3329b9b",
+    "type": "split",
+    "children": [
+      {
+        "id": "0498de1da49e3966",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "66a0470b2d1c637c",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "kubernetes/Preparing for the CKA in 15 days..md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "4c8a1e05e87a7d76",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "kubernetes/Preparing for the CKA in 15 days..md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "7711743d59ffe6fa",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "bfdc0d3e6c84dc2e",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "kubernetes/Preparing for the CKA in 15 days..md"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "ribbon": {
+    "mostRecentAction": ""
+  },
+  "active": "740bc45f4c329135",
+  "lastOpenFiles": [
+    "kubernetes/kubernetes_index.md",
+    "Terraform/Terraform Cloud.md",
+    "Terraform/Terraform_index.md",
+    "Markdown/Markdown_index.md",
+    "kustomize/kustomize_problem_statement.md",
+    "kustomize/kustomize_index.md",
+    "gcp/Cloud_CDN.md",
+    "gcp/GCP_index.md"
+  ]
+}

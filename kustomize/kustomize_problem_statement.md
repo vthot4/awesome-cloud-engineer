@@ -39,9 +39,12 @@ How do we actually go about modifying the different configurations on a per-envi
 One of the simplest solutions to this problem is to create three separate directories, one for each environment. 
 
 🗂️  dev 
-
+           📝   nginx-depl.yml	
 🗂️  stg
-
+           📝  nginx-depl.yml
 🗂️  prod
+           📝  nginx-depl.yml
 
+This is a perfectly fine slution, but it is not the most optimal solution. Imagine if we need to add  `service.yml` . We need to remember to copy the same file in all environments.
 
+Let's take a look at how Kustomize addresses this issue. 
