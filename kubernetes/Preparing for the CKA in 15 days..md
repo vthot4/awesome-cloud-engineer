@@ -1,3 +1,4 @@
+# Preparing for the CKA in 15 days.
 
 CKA is designed to test if the candidates have enough knowledge and skills to be K8s administrators. You need to know what skills and abilities the CKA expect the candidates to demonstrate in the exam so that you can align your daily practices with these requirements accordingly during preparation.
 
@@ -83,6 +84,46 @@ We can think of the Scheduler task as choosing the best place to allocate the re
 
 ### Configuring Scheduler Profiles
 - https://kubernetes.io/docs/reference/scheduling/config/ 
+
+
+### Exercises
+
+**Shedule a nginx pod on specific node using *NodeName*.**
+
+     <details><summary>show</summary><p>
+
+    [Assigning Pods to Nodes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodename)
+
+    Generate yaml file:
+
+        kubectl -n practice run nginx-nodename --image nginx --dry-run=client -o yaml > nodename.yaml
+
+    Choose one of the nodes(kubectl get nodes) and edit the file:
+
+    ```YAML
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      creationTimestamp: null
+      labels:
+         run: nginx-nodename
+      name: nginx-nodename
+    spec:
+      nodeName: <node_name> # add
+      containers:
+      - image: nginx
+        name: nginx-nodename
+        resources: {}
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+    status: {}
+    ```
+
+    Create the pod and check where the pod was scheduled.
+
+    *Hint: Use '-o wide' to check on which node the pod landed.*
+
+    **Take-away**: *--dry-run=client* is used to check if the resource can be created. Adding *-o yaml > filename.yaml* redirects the raw output to file.
 
 
 
