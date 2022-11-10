@@ -124,7 +124,7 @@ We can think of the Scheduler task as choosing the best place to allocate the re
     *Hint: Use '-o wide' to check on which node the pod landed.*
 
     **Take-away**: *--dry-run=client* is used to check if the resource can be created. Adding *-o yaml > filename.yaml* redirects the raw output to file.
-
+</details>
 
 
 
