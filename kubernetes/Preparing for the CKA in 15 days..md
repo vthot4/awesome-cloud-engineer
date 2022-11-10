@@ -88,10 +88,12 @@ We can think of the Scheduler task as choosing the best place to allocate the re
 
 ### Exercises
 
+### Scheduling ###
+
 **Shedule a nginx pod on specific node using *NodeName*.**
 
-<details><summary>show</summary>
-<br>
+<details><summary>show</summary><p>
+
     [Assigning Pods to Nodes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodename)
 
     Generate yaml file:
