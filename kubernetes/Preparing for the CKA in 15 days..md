@@ -28,6 +28,7 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 - https://github.com/walidshaari/Kubernetes-Certified-Administrator
 - https://github.com/StenlyTU/K8s-training-official
 - https://github.com/ramitsurana/awesome-kubernetes
+- https://labs.play-with-k8s.com/ 
 
 ## Books
 - The book _**Kubernetes in action**_ gives good general overview. The book can be [_downloaded_](https://github.com/indrabasak/Books/blob/master/Kubernetes%20in%20Action.pdf) from Internet.
@@ -46,8 +47,8 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 - Kubernetes 101 - Kubernetes scheduler [Link](https://dominik-tornow.medium.com/the-kubernetes-scheduler-cd429abac02f)
 - A Deep Dive into Kubernetes Scheduling. [Link](https://thenewstack.io/a-deep-dive-into-kubernetes-scheduling/)
 - A Brief Analysis on the Implementation of the Kubernetes Scheduler. [Link](https://www.alibabacloud.com/blog/a-brief-analysis-on-the-implementation-of-the-kubernetes-scheduler_595083)
-- 
-
+- Scheduler code hierarchy overview. [link](https://github.com/kubernetes/community/blob/master/contributors/devel/sig-scheduling/scheduling_code_hierarchy_overview.md)
+- Scheduling Framework. [Link](https://kubernetes.io/docs/concepts/scheduling-eviction/scheduling-framework/)
 
 > A scheduler watches for newly created Pods that have no Node assigned. For every Pod that the scheduler discovers, the scheduler becomes responsible for finding the best Node for that Pod to run on.
 
@@ -57,6 +58,10 @@ We can think of the Scheduler task as choosing the best place to allocate the re
 
 
 ### Manual scheduling
+- https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#nodename
+- Learn How to Assign Pods to Nodes in Kubernetes Using nodeSelector and Affinity Feature. [Link](https://medium.com/kubernetes-tutorials/learn-how-to-assign-pods-to-nodes-in-kubernetes-using-nodeselector-and-affinity-features-e62c437f3cf8)
+
+
 
 ### Labels and Selectors
 
@@ -80,11 +85,176 @@ We can think of the Scheduler task as choosing the best place to allocate the re
 - https://kubernetes.io/docs/reference/scheduling/config/ 
 
 
+
+
 ## Day 3
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Logging & Monitoring.
 
+> Application logs can help you understand what is happening inside your application. The logs are particularly useful for debugging problems and monitoring cluster activity.
+
+### Monitor Cluster Components
+
+- https://github.com/kubernetes-sigs/metrics-server
+
+The Kubernetes Metrics Server is a resource metrics monitoring tool for Kubernetes. The Kubernetes Metrics Server measures CPU and memory usage across the Kubernetes cluster. This metrics-server collects metrics and then shows resource usage statistics for your cluster so that you can monitor resource usage for each node and also for each pod.
+
+You can monitor your resource usage with using the `top command` like `kubectl top pods` and `kubectl top nodes`.
+
+#### Installing Kubernetes Metrics Server
+The k8s metrics server is not installed by default in your Kubernetes cluster. You can install it with the following command:
+
+```shell
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+```
+
+```shel
+serviceaccount/metrics-server created
+clusterrole.rbac.authorization.k8s.io/system:aggregated-metrics-reader created
+clusterrole.rbac.authorization.k8s.io/system:metrics-server created
+rolebinding.rbac.authorization.k8s.io/metrics-server-auth-reader created
+clusterrolebinding.rbac.authorization.k8s.io/metrics-server:system:auth-delegator created
+clusterrolebinding.rbac.authorization.k8s.io/system:metrics-server created
+service/metrics-server created
+deployment.apps/metrics-server created
+apiservice.apiregistration.k8s.io/v1beta1.metrics.k8s.io created
+```
+
+To get the stats about your resources, you just need to run these commands. To monitor the resource of your nodes:
+```shell
+kubectl top nodes
+```
+
+If you encount this error: "Error from server (ServiceUnavailable): the server is currently unable to handle the request (get pods.metrics.k8s.io)"
+```shell
+╰─$ k get apiservices |grep metrics                                                                                                                  
+v1beta1.metrics.k8s.io                 kube-system/metrics-server   False (MissingEndpoints)   4m39s
+
+$ k edit deployments.apps -n kube-system metrics-server
+```
+Make sure you add the following options:
+```yaml
+--kubelet-insecure-tls=true  
+
+    spec:
+      containers:
+      - args:
+        - --cert-dir=/tmp
+        - --secure-port=4443
+        - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+        - --kubelet-use-node-status-port
+        - --metric-resolution=15s
+        - --kubelet-insecure-tls=true
+
+## Add hostNetwork : true
+dnsPolicy: ClusterFirst
+hostNetwork: true
+
+## After the changes we can try again ...
+
+╰─$ k top no
+NAME                 CPU(cores)   CPU%   MEMORY(bytes)   MEMORY%
+kind-control-plane   120m         3%     697Mi           35%
+kind-worker          28m          0%     164Mi           8%
+kind-worker2         21m          0%     142Mi           7%
+kind-worker3         24m          0%     132Mi           6%
+
+╰─$ k top pods -A
+NAMESPACE            NAME                                         CPU(cores)   MEMORY(bytes)
+kube-system          coredns-558bd4d5db-ghm4j                     4m           12Mi
+kube-system          coredns-558bd4d5db-wj69g                     3m           10Mi
+kube-system          etcd-kind-control-plane                      24m          40Mi
+........
+........
+```
+
+
+### Managing Application Logs
+- https://kubernetes.io/docs/concepts/cluster-administration/logging/ 
+
+Kubernetes captures logs from each container in a running Pod.
+
+To test the logging commands, we will deploy a pod that generates events. 
+
+```yaml
+### event-simulator.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: event-simulator-pod
+spec:
+  containers:
+  - name: event-simulator
+    image: kodekloud/event-simulator
+```
+
+You deploy and check the logs.
+```shell
+╰─$ k create -f event-simulator.yaml
+pod/event-simulator-pod created
+
+╰─$ k logs -f event-simulator-pod
+[2022-11-10 00:03:20,033] INFO in event-simulator: USER1 logged out
+[2022-11-10 00:03:21,039] INFO in event-simulator: USER3 logged in
+[2022-11-10 00:03:22,042] INFO in event-simulator: USER3 is viewing page3
+[2022-11-10 00:03:23,044] INFO in event-simulator: USER4 logged in
+[2022-11-10 00:03:24,047] INFO in event-simulator: USER3 is viewing page1
+[2022-11-10 00:03:25,049] WARNING in event-simulator: USER5 Failed to Login as the account is locked due to MANY FAILED ATTEMPTS.
+
+╰─$ k delete pod event-simulator-pod --force
+```
+
+Other example:
+```yaml
+### counter-pod.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: counter
+spec:
+  containers:
+  - name: count
+    image: busybox:1.28
+    args: [/bin/sh, -c,
+            'i=0; while true; do echo "$i: $(date)"; i=$((i+1)); sleep 1; done']
+
+```
+
+To run the pod, use the following command:
+```shell
+╰─$ k apply -f https://k8s.io/examples/debug/counter-pod.yaml
+pod/counter created
+
+╰─$ k get pods
+NAME      READY   STATUS    RESTARTS   AGE
+counter   1/1     Running   0          9s
+
+╰─$ k logs counter
+0: Thu Nov 10 00:14:18 UTC 2022
+1: Thu Nov 10 00:14:19 UTC 2022
+2: Thu Nov 10 00:14:20 UTC 2022
+3: Thu Nov 10 00:14:21 UTC 2022
+4: Thu Nov 10 00:14:22 UTC 2022
+5: Thu Nov 10 00:14:23 UTC 2022
+6: Thu Nov 10 00:14:24 UTC 2022
+7: Thu Nov 10 00:14:25 UTC 2022
+8: Thu Nov 10 00:14:26 UTC 2022
+9: Thu Nov 10 00:14:27 UTC 2022
+10: Thu Nov 10 00:14:28 UTC 2022
+```
+
+You can use `kubectl logs --previous` to retrieve logs from a previous instantion of a container. If you pod has multiple containers, specify which container's logs you want to access by appending a container name to the command, with `-c` flag like so:
+```bash
+kubectl logs counter -c count
+```
+
+
+
 ## Day 4
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Application Lifecycle Management.
+
+### Rolling Updates and Rollbacks
+
+
 
 ## Day 5
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Cluster Maintenance.
