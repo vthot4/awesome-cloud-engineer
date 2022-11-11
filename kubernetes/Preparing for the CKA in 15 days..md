@@ -39,6 +39,34 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 - Review Linux Foundation Certification Exam: Candidate Handbook. [Link](https://docs.linuxfoundation.org/tc-docs/certification/lf-handbook2)
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Core Concepts.
 
+### Some concepts.
+
+#### Kubernetes Objects
+The following are the main Kubernetes objects we're going to use in our daily life while working with Kubernetes cluster:
+
+- **Pod**. The smallest deployable unit in Kubernetes is a Pod. the worker node hosts the Pods, which contain the actual application workload. The applications are packaged and deployed in the containers. A single Pod contains one or more containers.
+
+- **ReplicaSet**. ReplicaSet helps Pods achieve availability when users define a certain number of replicas at a time with a ReplicaSet. The role of the ReplicaSet is to make sure the cluster will always have an exact number of replicas up and running in the Kubernetes cluster. If any of them were to fail, new ones will be deployed.
+
+- **DaemonSet**. DaemonSet is like ReplicaSet, but it makes sure at least one copy of your Pod is evenly presented on each node in the Kubernetes cluster. If a new node is added to the cluster, a replica of that Pod is automatically assigned to that node. Similarly, when a node is removed, the Pod is automatically removed.
+
+- **StatefulSet**. StatefulSet is used to manage stateful applications. Users can use StatefulSet when a storage volume is needed to provide persistence for the workload.
+
+- **Job**. A job can be used to reliably execute a workload automatically. When it completes, typically, a job will create one or more Pods. After the job is finished, the containers will exit and the Pods will enter the Completed status. An example of using jobs is when we want to run a workload with a particular purpose and make sure it runs once and succeeds.
+
+- **CronJob**. CronJobs are based on the capability of a job by adding value to allow users to execute jobs on a schedule. Users can use a cron expression to define a particular schedule per requirement.
+
+- **Deployment**. A Deployment is a convenient way where you can define the desired state Deployment, such as deploying a ReplicaSet with
+
+#### YAML manifest
+Each YAML file that is created for Kubernetes must contain four mandatory keys:
+
+- **apiVersion**. This field tells you in which API version the resource is declared. Each resource type has an apiVersion key that must be set in this field. The pod resource type is in API version `v1`. 
+- **Kind**. This Kind field indicates the resource type the YAML file will create. Here, it is a pod that is going to be created.
+- **Metadata**. This field tells Kubernetes about the name of the actual resource.
+- **Spec.** This field tells Kubernetes what the object is made of. 
+
+
 
 ## Day 2
 
@@ -90,43 +118,6 @@ We can think of the Scheduler task as choosing the best place to allocate the re
 
 ### Scheduling ###
 
-**Shedule a nginx pod on specific node using *NodeName*.**
-
-<details><summary>show</summary><p>
-
-    [Assigning Pods to Nodes documentation](https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#nodename)
-
-    Generate yaml file:
-
-        kubectl -n practice run nginx-nodename --image nginx --dry-run=client -o yaml > nodename.yaml
-
-    Choose one of the nodes(kubectl get nodes) and edit the file:
-
-    ```YAML
-    apiVersion: v1
-    kind: Pod
-    metadata:
-      creationTimestamp: null
-      labels:
-         run: nginx-nodename
-      name: nginx-nodename
-    spec:
-      nodeName: <node_name> # add
-      containers:
-      - image: nginx
-        name: nginx-nodename
-        resources: {}
-      dnsPolicy: ClusterFirst
-      restartPolicy: Always
-    status: {}
-    ```
-
-    Create the pod and check where the pod was scheduled.
-
-    *Hint: Use '-o wide' to check on which node the pod landed.*
-
-    **Take-away**: *--dry-run=client* is used to check if the resource can be created. Adding *-o yaml > filename.yaml* redirects the raw output to file.
-</details>
 
 
 
@@ -351,6 +342,26 @@ alias kge="k get events --sort-by='.metadata.creationTimestamp' |tail -8"
 source <(kubectl completion bash) 
 echo "source <(kubectl completion bash)" >> ~/.bashrc
 ```
+Working in conjuntin with the shortcut, you can do the following:
+```shell
+alias k=kubectl
+complete -F __start_kubectl k
+```
+
+### Be careful with the security context
+The context is the most important indicator to let you know which Kubernetes cluster you're currently working on. Yo can use the following command to check out the context:
+```shell
+kubectl config current-context
+```
+If you want to go to a specific Kubernetes cluster, you can use the following command:
+```
+kubectl config use-context my-current-cluster-name
+```
+You can also check out a list of Kubernetes clusters you've worked on with the following command in the actual exam.
+```
+kubectl config get-contexts
+```
+
 
 ### Use the short name of K8s Resources instead of the full name.
 | **Short name** | **Full name**          | **Short name** | **Full name**               |

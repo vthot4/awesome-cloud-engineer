@@ -8,54 +8,6 @@
         "type": "tabs",
         "children": [
           {
-            "id": "178294c2a166b3fc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "gcp/GCP_index.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "64ee299a1b0e6fbe",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Markdown/Markdown_index.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "54085a5eba4d0b6b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Terraform/Terraform_index.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "03b75287890be353",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "kubernetes/kubernetes_index.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "740bc45f4c329135",
             "type": "leaf",
             "state": {
@@ -67,8 +19,7 @@
               }
             }
           }
-        ],
-        "currentTab": 4
+        ]
       }
     ],
     "direction": "vertical"
@@ -185,20 +136,17 @@
     "width": 300,
     "collapsed": true
   },
-  "ribbon": {
-    "mostRecentAction": ""
-  },
   "active": "740bc45f4c329135",
   "lastOpenFiles": [
+    "gcp/GCP_index.md",
+    "Markdown/Markdown_index.md",
+    "Terraform/Terraform_index.md",
     "kubernetes/kubernetes_index.md",
     "kubernetes/Preparing for the CKA in 15 days..md",
     "kubernetes/images/kubernetes_cheduler.png",
     "Terraform/Terraform Cloud.md",
-    "Terraform/Terraform_index.md",
-    "Markdown/Markdown_index.md",
     "kustomize/kustomize_problem_statement.md",
     "kustomize/kustomize_index.md",
-    "gcp/Cloud_CDN.md",
-    "gcp/GCP_index.md"
+    "gcp/Cloud_CDN.md"
   ]
 }
