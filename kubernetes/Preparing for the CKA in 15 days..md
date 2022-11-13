@@ -24,7 +24,8 @@ Perseverance leads to success. I strongly suggest you don’t skip a single day 
 - Kubernetes The Hard Way [Link](https://github.com/kelseyhightower/kubernetes-the-hard-way)
 - How to Pass the Certified Kubernetes Administratos (CKA) Exam Without Any Stress? [Link](https://www.zhaohuabing.com/post/2022-02-08-how-to-prepare-cka-en/)
 - CKA Exam Study Guide: A Complete Resource for CKA Aspirants [Link](https://devopscube.com/cka-exam-study-guide/)
-- 
+- Learn Kubernetes Basic https://kubernetes.io/docs/tutorials/kubernetes-basics/
+
 - https://github.com/alijahnas/CKA-practice-exercises 
 - https://github.com/walidshaari/Kubernetes-Certified-Administrator
 - https://github.com/StenlyTU/K8s-training-official
@@ -288,6 +289,256 @@ kubectl logs counter -c count
 
 ### Rolling Updates and Rollbacks
 
+```shell
+kubectl rollout status deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+```
+
+**Example:**
+```
+k create deployment --image=nginx nginx --replicas=2 --dry-run=client -o yaml > deployment.yaml
+
+╰─$ k apply -f deployment.yaml                                                      
+deployment.apps/nginx created
+
+╰─$ k get pods
+NAME                          READY   STATUS    RESTARTS   AGE
+nginx-6799fc88d8-6njdv        1/1     Running   0          25s
+nginx-6799fc88d8-zsknr        1/1     Running   0          25s
+nginx-test-658f4cf99f-2rwdv   1/1     Running   0          61m
+
+╰─$ k set image deploy nginx nginx=nginx:1.9.1
+deployment.apps/nginx image updated
+
+╰─$ k describe deployments.apps nginx |grep -i image
+    Image:        nginx:1.9.1
+```
+
+### Deployment strategy
+
+
+### Commands and Arguments in Kubernetes
+- https://kubernetes.io/docs/tasks/inject-data-application/define-command-argument-container/ 
+
+The configuration file for a Container has an `image` field that specifies the Docker image to be run in the container. A Docker image has metadata that includes a default **Entrypoint** and default **Cmd**. When Kubernetes starts a Container, it runs the image's default Entrypoint and passes the image's default Cmd as argument.
+
+If you want to override the image's default Entrypoint and Cmd, you can use the `comand` and `args` fields in the Container's configuration.
+
+- `comand` -> field specifies the actual command run by the Container.
+- `args` -> field specifies the arguments passed to the command.
+
+**Example:**
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: ubuntu-sleeper-pod
+spec:
+ containers:
+ - name: ubuntu-sleeper
+   image: ubuntu-sleeper
+   command: ["sleep2.0"]
+   args: ["10"]
+```
+
+### Configure Environment Variables in Applications
+- https://kubernetes.io/docs/tasks/inject-data-application/define-environment-variable-container/ 
+
+Traditionally, environment variables are dynamic key values that are accessible to any process running on the system. Kubernetes uses environment variables quite extensively and for a few different things. In Kubernetes, environment variables are scoped to a container, and there are three main ways of adding them.
+
+**Direct.** This option is the most straightforward. You can simply specify environment variables directly in your deployment definition with a `env` keyword.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: envar-demo
+  labels:
+    purpose: demonstrate-envars
+spec:
+  containers:
+  - name: envar-demo-container
+    image: gcr.io/google-samples/node-hello:1.0
+    env:
+    - name: DEMO_GREETING
+      value: "Hello from the environment"
+    - name: DEMO_FAREWELL
+      value: "Such a sweet sorrow"
+```
+
+```shell
+## Create pod based on the manifest
+kubectl apply -f https://k8s.io/examples/pods/inject/envars.yaml
+## List the running Pods
+kubectl get pods -l purpose=demonstrate-envars
+## List the Pod's container environment variables
+kubectl exec envar-demo -- printenv
+
+╰─$ kubectl exec envar-demo -- printenv
+HOME=/root
+KUBERNETES_SERVICE_PORT_HTTPS=443
+KUBERNETES_SERVICE_PORT=443
+KUBERNETES_SERVICE_HOST=10.96.0.1
+KUBERNETES_PORT_443_TCP_ADDR=10.96.0.1
+KUBERNETES_PORT_443_TCP_PORT=443
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+KUBERNETES_PORT_443_TCP=tcp://10.96.0.1:443
+KUBERNETES_PORT=tcp://10.96.0.1:443
+DEMO_GREETING=Hello from the environment
+DEMO_FAREWELL=Such a sweet sorrow
+NODE_VERSION=4.4.2
+NPM_CONFIG_LOGLEVEL=info
+HOSTNAME=envar-demo
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+```
+
+**Secrets** and **Config-Maps** are the other ways to configure environment variables. We will see this in the following sections. 
+
+### Configure ConfigMaps in Applications
+- https://kubernetes.io/docs/tasks/configure-pod-container/configure-pod-configmap/
+
+A configMap is just a resource that stores some data that can be loaded into a pod.  A ConfigMap is a dictionary of configuration settings. This dictionary consists of key-value pairs of strings. Kubernetes provides these values to your containers. Like with other dictionaries (maps, hashes, ...), the key lets you get and set the configuration value.
+
+You can pass in the `--from-literal` argument to define a literal value from the command line.
+```shell
+kubectl create configmap app-config --from-literal=APP_COLOR=blue --from-literal=APP_MODE=prod
+```
+The output is similar to this: 
+```shell
+╰─$ kubectl create configmap app-config --from-literal=APP_COLOR=blue --from-literal=APP_MODE=prod -o yaml
+apiVersion: v1
+data:
+  APP_COLOR: blue
+  APP_MODE: prod
+kind: ConfigMap
+metadata:
+  creationTimestamp: "2022-11-11T23:52:39Z"
+  name: app-config
+  namespace: default
+  resourceVersion: "24657"
+```
+
+We can also use a yaml  file to define the ConfigMap.
+
+Example: config-map.yaml
+```yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+data:
+  APP_COLOR: blue
+  APP_MODE: prod
+```
+
+To inject configmap in pod:
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: simple-webapp-color
+spec:
+ containers:
+ - name: simple-webapp-color
+   image: simple-webapp-color
+   ports:
+   - containerPort: 8080
+   envFrom:
+   - configMapRef:
+       name: app-config
+```
+
+### Secrets
+- https://kubernetes.io/docs/concepts/configuration/secret/
+- https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/
+
+A Secret is an object that contains a small amount of sensitive data such as a password, a token, or a key. Such information might otherwise be put in a Pod specification or in a container image. Using a Secret means that you don't need to include confidential data in your application code.
+
+**The imperative way**
+```shell
+kubectl create secret generic <secret-name> --from-literal=<key>=<value>
+```
+
+**The declarative way**
+```shell
+Generate a hash value of the password and pass it to secret-data.yaml definition value as a value to DB_Password variable.
+$ echo -n "mysql" | base64
+$ echo -n "root" | base64
+$ echo -n "paswrd"| base64
+```
+Create a secret definition file and run `kubectl create -f <secret-file.yaml>`
+```shell
+apiVersion: v1
+kind: Secret
+metadata:
+ name: app-secret
+data:
+  DB_Host: bX1zcWw=
+  DB_User: cm9vdA==
+  DB_Password: cGFzd3Jk
+```
+To decode secrets
+```
+$ echo -n "bX1zcWw=" | base64 --decode
+$ echo -n "cm9vdA==" | base64 --decode
+$ echo -n "cGFzd3Jk" | base64 --decode
+```
+
+#### Note on Secrets
+- Secrets are not Encrypted. It is only encoded.
+	- Do not check-in Secret objects to SCM along with code.
+- Secrets are not encrypted in ETCD.
+	- Enable encryption at rest
+- Anyone able to create pods/deployments in the same namespace can access the secrets.
+	- Configure least-privilege access to Secrets - RBAC.
+- Consider third-party secrets store providers AWS Provider, Azure Provider, GCP provider, Vault Provider.
+
+### Multi Container PODs.
+- https://www.mirantis.com/blog/multi-container-pods-and-container-communication-in-kubernetes/
+-  [https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/](https://kubernetes.io/blog/2015/06/the-distributed-system-toolkit-patterns/) 
+- https://kubernetes.io/docs/tasks/access-application-cluster/communicate-containers-same-pod-shared-volume/ 
+- https://loft.sh/blog/kubernetes-init-containers/
+
+The primary purpose of a multi-container Pod is to support co-located, co-managed helper processes for a primary application. There are some general patterns for using helper processes in Pods:
+
+#### Sidecar
+**Sidecar containers** "help" the main container. Some examples include log or data change watchers, monitoring adapters, and so on. A log watcher, for example, can be built once by a different team and reused across different applications. Another example of a sidecar container is a file or data loader that generates data for the main container.
+
+#### Adapter
+**Proxies, bridges, and adapters** connect the main container with the external world. For example, Apache HTTP server or nginx can serve static files. It can also act as a reverse proxy to a web application in the main container to log and limit HTTP requests. Another example is a helper container that re-routes requests from the main container to the external world. This makes it possible for the main container to connect to localhost to access, for example, an external database, but without any service discovery.
+
+#### Ambassador
+Ambassador containers proxy a local connection to the world.  As an example, consider a Redis cluster with read-replicas and a single write master.  You can create a Pod that groups your main application with a Redis ambassador container.  The ambassador is a proxy is responsible for splitting reads and writes and sending them on to the appropriate servers.  Because these two containers share a network namespace, they share an IP address and your application can open a connection on “localhost” and find the proxy without any service discovery.  As far as your main application is concerned, it is simply connecting to a Redis server on localhost.  This is powerful, not just because of separation of concerns and the fact that different teams can easily own the components, but also because in the development environment, you can simply skip the proxy and connect directly to a Redis server that is running on localhost.
+
+
+### init Containers
+- https://kubernetes.io/docs/concepts/workloads/pods/init-containers/
+
+An init container is a type of container that has a few modified operational behavior and rules. One of the most dominant features is that init containers are started and terminated before application containers, and they must run to completion with success. They specifically exist for initializing the workload environment.
+
+**EXAMPLE**
+This example defines a simple Pod that has two init containers. The first waits for `myservice`, and the second waits for `mydb`. Once both init containers complete, the Pod runs the app container from its `spec` section.
+
+```yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app.kubernetes.io/name: MyApp
+spec:
+  containers:
+  - name: myapp-container
+    image: busybox:1.28
+    command: ['sh', '-c', 'echo The app is running! && sleep 3600']
+  initContainers:
+  - name: init-myservice
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup myservice.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for myservice; sleep 2; done"]
+  - name: init-mydb
+    image: busybox:1.28
+    command: ['sh', '-c', "until nslookup mydb.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for mydb; sleep 2; done"]
+```
 
 
 ## Day 5
