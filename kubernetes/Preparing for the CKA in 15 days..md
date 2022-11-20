@@ -544,6 +544,138 @@ spec:
 ## Day 5
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Cluster Maintenance.
 
+### OS Upgrades
+- https://kubernetes.io/docs/tasks/administer-cluster/safely-drain-node/ 
+
+
+
+We need to take `node-xx` out for maintenace. Empy the node of all applications and mark it unschedulable. 
+```shell
+controlplane ~ ➜  k drain node01 --ignore-daemonsets
+node/node01 cordoned
+WARNING: ignoring DaemonSet-managed Pods: kube-system/kube-flannel-ds-h9t4d, kube-system/kube-proxy-dgng7
+evicting pod default/blue-797fc567b4-tjdpj
+evicting pod default/blue-797fc567b4-qnvh5
+pod/blue-797fc567b4-tjdpj evicted
+pod/blue-797fc567b4-qnvh5 evicted
+node/node01 drained
+```
+
+The maintenance tasks have been completed. Configure the `node-xx`to be schedulable again.
+```shell
+controlplane ~ ➜  kubectl uncordon node01 
+node/node01 uncordoned
+```
+
+### Kubernetes Software Versions.
+- https://kubernetes.io/releases/
+- ![kubernetes_images](./images/kubernetes_software-versions.png)
+
+### Cluster Upgrade Process
+
+We will be upgrading the controlplane node first. Drain the controlplane node of workloads and mark it `UnSchedulable`
+```shell
+controlplane ~ ✖ kubectl drain controlplane --ignore-daemonsets 
+node/controlplane cordoned
+WARNING: ignoring DaemonSet-managed Pods: kube-system/kube-flannel-ds-t2lx5, kube-system/kube-proxy-jcz54
+evicting pod kube-system/coredns-6d4b75cb6d-lv65c
+evicting pod default/blue-797fc567b4-tnrnn
+evicting pod kube-system/coredns-6d4b75cb6d-2vlrx
+evicting pod default/blue-797fc567b4-h7kd7
+pod/blue-797fc567b4-h7kd7 evicted
+pod/blue-797fc567b4-tnrnn evicted
+pod/coredns-6d4b75cb6d-2vlrx evicted
+pod/coredns-6d4b75cb6d-lv65c evicted
+node/controlplane drained
+
+controlplane ~ ➜  k describe node controlplane |grep -i taint
+Taints:             node.kubernetes.io/unschedulable:NoSchedule
+```
+
+Upgrade the `controlplane` components to exact version `v1.25.0`
+
+Upgrade the kubeadm tool (if not already), then the controlplane components, and finally the kubelet. Practice referring to the Kubernetes documentation page.  
+**Note:** While upgrading kubelet, if you hit dependency issues while running the `apt-get upgrade kubelet` command, use the `apt install kubelet=1.25.0-00` command instead.
+
+```shell
+# apt update
+Hit:1 https://packages.cloud.google.com/apt kubernetes-xenial InRelease                               
+Hit:2 http://archive.ubuntu.com/ubuntu bionic InRelease                                               
+Hit:3 https://download.docker.com/linux/ubuntu bionic InRelease                                       
+Hit:4 http://archive.ubuntu.com/ubuntu bionic-updates InRelease                                       
+Hit:5 http://archive.ubuntu.com/ubuntu bionic-backports InRelease                                     
+Hit:6 http://security.ubuntu.com/ubuntu bionic-security InRelease                 
+Reading package lists... Done                      
+Building dependency tree       
+Reading state information... Done
+61 packages can be upgraded. Run 'apt list --upgradable' to see them.
+
+# apt-get install kubeadm=1.25.0-00
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be upgraded:
+  kubeadm
+1 upgraded, 0 newly installed, 0 to remove and 60 not upgraded.
+Need to get 9,213 kB of archives.
+After this operation, 578 kB disk space will be freed.
+Get:1 https://packages.cloud.google.com/apt kubernetes-xenial/main amd64 kubeadm amd64 1.25.0-00 [9,213 kB]
+Fetched 9,213 kB in 0s (42.2 MB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+(Reading database ... 15453 files and directories currently installed.)
+Preparing to unpack .../kubeadm_1.25.0-00_amd64.deb ...
+Unpacking kubeadm (1.25.0-00) over (1.24.0-00) ...
+Setting up kubeadm (1.25.0-00) ...
+# kubeadm upgrade apply v1.25.0
+[upgrade/config] Making sure the configuration is correct:
+[upgrade/config] Reading configuration from the cluster...
+[upgrade/config] FYI: You can look at this config file with 'kubectl -n kube-system get cm kubeadm-config -o yaml'
+[upload-config] Storing the configuration used in ConfigMap "kubeadm-config" in the "kube-system" Namespace
+[preflight] Running pre-flight checks.
+[upgrade] Running cluster health checks
+[upgrade/version] You have chosen to change the cluster version to "v1.25.0"
+[upgrade/versions] Cluster version: v1.24.0
+[upgrade/versions] kubeadm version: v1.25.0
+[upgrade] Are you sure you want to proceed? [y/N]: y
+[upgrade/prepull] Pulling images required for setting up a Kubernetes cluster
+[upgrade/prepull] This might take a minute or two, depending on the speed of your internet connection
+[upgrade/prepull] You can also perform this action in beforehand using 'kubeadm config images pull'
+[upgrade/apply] Upgrading your Static Pod-hosted control plane to version "v1.25.0" (timeout: 5m0s)...
+[upgrade/etcd] Upgrading to TLS for etcd
+....
+....
+# apt-get install kubelet=1.25.0-00
+Reading package lists... Done
+Building dependency tree       
+Reading state information... Done
+The following packages will be upgraded:
+  kubelet
+1 upgraded, 0 newly installed, 0 to remove and 60 not upgraded.
+Need to get 19.5 MB of archives.
+After this operation, 2,121 kB disk space will be freed.
+Get:1 https://packages.cloud.google.com/apt kubernetes-xenial/main amd64 kubelet amd64 1.25.0-00 [19.5 MB]
+Fetched 19.5 MB in 0s (41.6 MB/s)
+debconf: delaying package configuration, since apt-utils is not installed
+(Reading database ... 15453 files and directories currently installed.)
+Preparing to unpack .../kubelet_1.25.0-00_amd64.deb ...
+/usr/sbin/policy-rc.d returned 101, not running 'stop kubelet.service'
+Unpacking kubelet (1.25.0-00) over (1.24.0-00) ...
+Setting up kubelet (1.25.0-00) ...
+/usr/sbin/policy-rc.d returned 101, not running 'start kubelet.service'
+
+# controlplane ~ ➜  systemctl daemon-reload 
+# controlplane ~ ➜  systemctl restart kubelet
+```
+
+Mark the `controlplane` node as 'Schedulable' again
+
+```shell
+controlplane ~ ➜  kubectl uncordon controlplane 
+node/controlplane uncordoned
+```
+
+### Backup and Restore Methods
+
 
 ## Day 6
 - CKA Certification Course - Certified Kubernetes Administrator. [Link](https://kodekloud.com/courses/certified-kubernetes-administrator-cka/)  Security.
