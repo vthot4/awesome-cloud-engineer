@@ -569,7 +569,7 @@ node/node01 uncordoned
 
 ### Kubernetes Software Versions.
 - https://kubernetes.io/releases/
-- ![kubernetes_images](./images/kubernetes_software-versions.png)
+- ![kubernetes_images](./images/Kubernetes_software-versions.png)
 
 ### Cluster Upgrade Process
 
